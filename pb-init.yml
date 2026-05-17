@@ -1,0 +1,13 @@
+---
+# Copyright 2026 Vladimir Botka <vbotka@gmail.com>
+# Simplified BSD License, https://opensource.org/licenses/BSD-2-Clause
+# SPDX-License-Identifier: BSD-2-Clause
+
+- name: ansible-pull-init first play.
+  hosts: localhost.my.domain
+    
+  tasks:
+
+    - name: Display classes.
+      ansible.builtin.debug:
+        var: iocage_classes
