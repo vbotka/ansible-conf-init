@@ -11,3 +11,6 @@
     - name: Display classes.
       ansible.builtin.debug:
         var: iocage_classes
+
+    - name: Hello world.
+      ansible.builtin.shell: 'echo "Hello world!" > /tmp/ansible-init-hello-world'
