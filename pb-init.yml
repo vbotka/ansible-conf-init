@@ -11,7 +11,7 @@
     ai_hostname: "{{ out_hostname.stdout }}"
     ai_class: "{{ ansible_local.iocage.class | d([]) | intersect(ai_db_class) }}"
     ai_at_default: ''
-    ai_async_default: false
+    ai_async_default: true
 
   tasks:
 
@@ -57,12 +57,12 @@
         - name: Set ai_cmd
           ansible.builtin.set_fact:
             ai_cmd: >
-              cd {{ ai_repo_dest }}/{{ ai_repo }};
               ansible-pull
               -i hosts
               -U {{ ai_repo_host }}/{{ ai_repo }}
               -d {{ ai_repo_dest }}/{{ ai_repo }}
-              {{ ai_repo_playbook }};
+              {{ ai_repo_playbook }}
+              &&
               echo '[INFO] ansible-pull finished.'
 
         - name: Execute ai_cmd
@@ -83,12 +83,12 @@
               {% set ai_repo_host = ai_db_class[i]['repo_host'] | d('') %}
               {% set ai_repo_dest = ai_db_class[i]['repo_dest'] | d('/root') %}
               {% set ai_repo_playbook = ai_db_class[i]['repo_playbook'] | d('pb.yml') %}
-              cd {{ ai_repo_dest }}/{{ ai_repo }};
               ansible-pull
               -i hosts
               -U {{ ai_repo_host }}/{{ ai_repo }}
               -d {{ ai_repo_dest }}/{{ ai_repo }}
-              {{ ai_repo_playbook }};
+              {{ ai_repo_playbook }}
+              &&
               {% endfor %}
               echo '[INFO] ansible-pull finished.'
 

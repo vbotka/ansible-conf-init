@@ -12,7 +12,7 @@
     - name: Execute command async=3600 poll=0
       async: 3600
       poll: 0
-      ansible.builtin.command:
+      ansible.builtin.shell:
         cmd: "{{ ai_cmd }}"
 
     - name: End of play.
