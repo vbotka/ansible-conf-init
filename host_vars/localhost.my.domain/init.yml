@@ -13,7 +13,7 @@ ai_db_host:
 
 ai_db_class_options:
   at: ''
-  async: false
+  async: true
 
 ai_db_class:
   test:
