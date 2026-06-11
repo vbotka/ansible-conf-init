@@ -1,0 +1,96 @@
+---
+# Copyright 2026 Vladimir Botka <vbotka@gmail.com>
+# Simplified BSD License, https://opensource.org/licenses/BSD-2-Clause
+# SPDX-License-Identifier: BSD-2-Clause
+
+- name: ansible-init
+  hosts: localhost.my.domain
+
+  vars:
+
+    ai_hostname: "{{ out_hostname.stdout }}"
+    ai_class: "{{ ansible_local.iocage.class | d([]) | intersect(ai_db_class) }}"
+    ai_at_default: ''
+    ai_async_default: false
+
+  tasks:
+
+    - name: Get hostname.
+      register: out_hostname
+      changed_when: false
+      ansible.builtin.command: hostname
+
+    - name: Get custom facts.
+      ansible.builtin.setup:
+        filter: ansible_local
+
+    - name: Display vars.
+      ansible.builtin.debug:
+        msg: |
+          ai_hostname: {{ ai_hostname }}
+          ai_class: {{ ai_class }}
+
+    - name: End of play if host not configured.
+      when:
+        - ai_hostname not in (ai_db_host.keys() | list)
+        - ai_class | length == 0
+      block:
+
+        - name: Warning host not configured.
+          ansible.builtin.debug:
+            msg: "pb-init: [WARNING] host {{ ai_hostname }} not configured. End of play."
+
+        - name: End of play.
+          ansible.builtin.meta: end_play
+
+    - name: Set ai_cmd from ai_db_host
+      when: ai_hostname in (ai_db_host.keys() | list)
+      vars:
+        ai_repo: "{{ ai_db_host[ai_hostname]['repo'] | d('') }}"
+        ai_repo_host: "{{ ai_db_host[ai_hostname]['repo_host'] | d('') }}"
+        ai_repo_dest: "{{ ai_db_host[ai_hostname]['repo_dest'] | d('/root') }}"
+        ai_repo_playbook: "{{ ai_db_host[ai_hostname]['repo_playbook'] | d('pb.yml') }}"
+        ai_at: "{{ ai_db_host[ai_hostname]['at'] | d(ai_at_default) }}"
+        ai_async: "{{ ai_db_host[ai_hostname]['async'] | d(ai_async_default) }}"
+      block:
+
+        - name: Set ai_cmd
+          ansible.builtin.set_fact:
+            ai_cmd: >
+              cd {{ ai_repo_dest }}/{{ ai_repo }};
+              ansible-pull
+              -i hosts
+              -U {{ ai_repo_host }}/{{ ai_repo }}
+              -d {{ ai_repo_dest }}/{{ ai_repo }}
+              {{ ai_repo_playbook }};
+              echo '[INFO] ansible-pull finished.'
+
+        - name: Execute ai_cmd
+          ansible.builtin.include_tasks: tasks/execute-cmd.yml
+
+    - name: Set ai_cmd from ai_db_class
+      when: ai_class | length > 0
+      vars:
+        ai_at: "{{ ai_db_class_options.at | d(ai_at_default) }}"
+        ai_async: "{{ ai_db_class_options.async | d(ai_async_default) }}"
+      block:
+
+        - name: Set ai_cmd
+          ansible.builtin.set_fact:
+            ai_cmd: >
+              {% for i in ai_class %}
+              {% set ai_repo = ai_db_class[i]['repo'] | d('') %}
+              {% set ai_repo_host = ai_db_class[i]['repo_host'] | d('') %}
+              {% set ai_repo_dest = ai_db_class[i]['repo_dest'] | d('/root') %}
+              {% set ai_repo_playbook = ai_db_class[i]['repo_playbook'] | d('pb.yml') %}
+              cd {{ ai_repo_dest }}/{{ ai_repo }};
+              ansible-pull
+              -i hosts
+              -U {{ ai_repo_host }}/{{ ai_repo }}
+              -d {{ ai_repo_dest }}/{{ ai_repo }}
+              {{ ai_repo_playbook }};
+              {% endfor %}
+              echo '[INFO] ansible-pull finished.'
+
+        - name: Execute ai_cmd
+          ansible.builtin.include_tasks: tasks/execute-cmd.yml
