@@ -1,12 +1,14 @@
 ---
+ai_repo: git://10.10.99.201
+
 ai_db_host:
   foo:
-    repo_host: git://10.10.99.201
+    repo_host: "{{ ai_repo }}"
     repo: ansible-conf-test
     repo_dest: /root
     repo_playbook: pb-test.yml
   bar:
-    repo_host: git://10.10.99.201
+    repo_host: "{{ ai_repo }}"
     repo: ansible-conf-test
     repo_dest: /root
     repo_playbook: pb-test.yml
@@ -17,17 +19,17 @@ ai_db_class_options:
 
 ai_db_class:
   log-server:
-    repo_host: git://10.10.99.201
+    repo_host: "{{ ai_repo }}"
     repo: ansible-conf-syslogng-server
     repo_dest: /root
     repo_playbook: pb-logserv.yml
   log-client:
-    repo_host: git://10.10.99.201
+    repo_host: "{{ ai_repo }}"
     repo: ansible-conf-syslogng-client
     repo_dest: /root
     repo_playbook: pb-logclient.yml
   test:
-    repo_host: git://10.10.99.201
+    repo_host: "{{ ai_repo }}"
     repo: ansible-conf-test
     repo_dest: /root
     repo_playbook: pb-test.yml
