@@ -14,4 +14,3 @@ This repository is used by:
 * example 525. [template ansible_init](https://ansible-collection-freebsd.readthedocs.io/en/latest/examples/525/example.html)
 * example 526. [template ansible_init](https://ansible-collection-freebsd.readthedocs.io/en/latest/examples/526/example.html)
 * iocage plugin [ansible-pull-syslogng-server](https://github.com/vbotka/iocage-plugins)
-* example 521. [iocage plugins ansible-pull-syslogng-*](https://ansible-collection-freebsd.readthedocs.io/en/latest/examples/521/example.html)
