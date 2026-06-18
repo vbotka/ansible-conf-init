@@ -10,6 +10,8 @@ This repository is used by:
 ## See
 
 * ansible collection [vbotka.freebsd](https://galaxy.ansible.com/ui/repo/published/vbotka/freebsd)
-* example [template ansible_init](https://ansible-collection-freebsd.readthedocs.io/en/latest/examples/524/example.html)
+* example 524. [template ansible_init](https://ansible-collection-freebsd.readthedocs.io/en/latest/examples/524/example.html)
+* example 525. [template ansible_init](https://ansible-collection-freebsd.readthedocs.io/en/latest/examples/525/example.html)
+* example 526. [template ansible_init](https://ansible-collection-freebsd.readthedocs.io/en/latest/examples/526/example.html)
 * iocage plugin [ansible-pull-syslogng-server](https://github.com/vbotka/iocage-plugins)
-* example [iocage plugins ansible-pull-syslogng-*](https://ansible-collection-freebsd.readthedocs.io/en/latest/examples/521/example.html)
+* example 521. [iocage plugins ansible-pull-syslogng-*](https://ansible-collection-freebsd.readthedocs.io/en/latest/examples/521/example.html)
