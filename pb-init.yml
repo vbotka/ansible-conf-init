@@ -23,13 +23,21 @@
     - name: Get custom facts.
       ansible.builtin.setup:
         filter: ansible_local
+      
+    - name: Include variables from my_vars directory
+      when: item is match('.*\.(yml|yaml)$')
+      ansible.builtin.include_vars:
+        file: "{{ item }}"
+      loop: "{{ query('ansible.builtin.fileglob', my_vars ~ '/*') }}"
 
     - name: Display vars.
       ansible.builtin.debug:
         msg: |
           ansible_pull_mode: {{ ansible_pull_mode | d(false) }}
+          my_vars: {{ my_vars }}
           ai_hostname: {{ ai_hostname }}
           ai_class: {{ ai_class }}
+          project_hosts: {{ project_hosts | d({}) }}
 
     - name: End of play if host not configured.
       when:
